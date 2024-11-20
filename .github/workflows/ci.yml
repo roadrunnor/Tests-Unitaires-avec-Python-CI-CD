@@ -10,7 +10,7 @@ name: CI
 on:
   push: # Lors d'un push
     branches: # Sur les branches spécifiées
-      - main # Exécuter sur la branche principale (main)
+      - main # Exécuter sur la branche principale (main) 
   pull_request: # Lors d'une demande de pull
     branches: # Sur les branches spécifiées
       - main # Exécuter quand un PR est fait sur la branche principale (main)
