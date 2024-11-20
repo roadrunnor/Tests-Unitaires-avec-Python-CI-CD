@@ -1,0 +1,46 @@
+# Nom du workflow - cela permet d'identifier le workflow dans l'interface GitHub Actions
+# Le nom du workflow est "CI", ce qui signifie "Continuous Integration". Ce nom apparaîtra dans l'interface GitHub Actions.
+name: CI
+
+# Déclencheurs du workflow - définit quand le workflow doit être exécuté
+# Le workflow est déclenché par :
+# - Un push sur la branche main : à chaque fois que du nouveau code est poussé sur la branche principale.
+# - Une pull request vers la branche main : lorsque vous créez une demande de fusion vers la branche principale.
+
+on:
+  push: # Lors d'un push
+    branches: # Sur les branches spécifiées
+      - main # Exécuter sur la branche principale (main)
+  pull_request: # Lors d'une demande de pull
+    branches: # Sur les branches spécifiées
+      - main # Exécuter quand un PR est fait sur la branche principale (main)
+
+# Définition des jobs dans le workflow
+# Une job est une série d'étapes exécutées sur un agent CI et sont les tâches à exécuter.
+# Ici, nous avons une job appelé build
+jobs:
+  build:
+    # L'environnement de travail pour la job
+    runs-on: ubuntu-latest # Utilise la dernière version d'Ubuntu
+
+    # Les 3 étapes à exécuter pour cette job
+    steps:
+      # Étape 1: Cloner le dépôt sur l'agent CI
+      # Cette étape clone le code source du dépôt sur l'agent d'exécution.
+      # Ceci est essentiel pour avoir accès aux fichiers de mon dépôt pour la suite des étapes.
+      - name: Checkout code # Nom de l'étape
+        uses: actions/checkout@v2 # Utilisation de l'action pour cloner le code source du dépôt
+
+      # Étape 2: Installe la version de Python nécessaire pour garantir que Python est disponible pour exécuter mes tests
+      - name: Set up Python # Nom de l'étape
+        uses: actions/setup-python@v2 # Utilisation de l'action pour installer Python
+        with:
+          python-version: "3.x" # Installe la version 3.x de Python (ex: 3.8, 3.9)
+
+      # Étape 3: Exécuter les tests
+      # Le -m unittest discover -s tests recherche tous les fichiers de test dans le répertoire tests et les exécute.
+      # Cela permet de vérifier si toutes les fonctionnalités du code fonctionnent correctement après chaque modification.
+      - name: Run tests # Nom de l'étape
+        # Exécute tous les tests trouvés dans le dossier 'tests' de mon projet
+        run: |
+          python -m unittest discover -s tests
